@@ -1,10 +1,16 @@
-use std::{cmp::{max, min}, collections::HashMap, default};
+use std::{cmp::{max, min}, collections::HashMap, default, io::stdin};
 
 #[derive(Debug)]
 enum HexOwner {
     P1,
     P2,
     None
+}
+
+#[derive(Debug, PartialEq)]
+enum Turn {
+    P1,
+    P2
 }
 
 #[derive(Debug)]
@@ -17,12 +23,13 @@ struct Hex {
 #[derive(Debug)]
 pub struct BoardState {
     state: HashMap<(i32, i32), Hex>,
-    board_size: i8
+    board_size: i8,
+    turn: Turn
 }
 
 impl BoardState {
     pub fn new(board_size: i8) -> Self {
-        Self {state: HashMap::new(), board_size }
+        Self {state: HashMap::new(), board_size, turn: Turn::P1 }
     }
 
     pub fn initialize_state(&mut self) {
@@ -37,6 +44,55 @@ impl BoardState {
                 self.state.insert((q, r), Hex { q, r, owner: HexOwner::None });
             } 
         }
+    }
+
+    // --- DEBUG ---
+
+    pub fn make_move(&mut self, q: i32, r: i32) {
+        let hex_owner: HexOwner;
+
+        if self.turn == Turn::P1 { hex_owner = HexOwner::P1; }
+        else {hex_owner =  HexOwner::P2;}
+
+        self.state.insert((q, r), Hex { q, r, owner: hex_owner});
+        
+        self.next_turn();
+    }
+
+    fn next_turn(&mut self) {
+        if self.turn == Turn::P1 { self.turn = Turn::P2; }
+        else { self.turn = Turn::P2; }
+    }
+
+    fn clear_screen(&self) { print!("\x1B[2J\x1B[1;1H"); }
+
+    pub fn start_game(&mut self) {
+        loop {
+            self.clear_screen();
+
+            print!("\n\n\n");
+
+            self.print_state_pretty();
+
+            println!("Enter move with format: q r");
+
+            let mut input: String = String::new();
+
+            stdin().read_line(&mut input).unwrap();
+
+            if input == "x" { break };
+
+            let chars: Vec<&str> = input.split_whitespace().collect();
+
+            let q: i32 = chars[0].trim().parse().unwrap();
+            let r: i32 = chars[1].trim().parse().unwrap();
+
+            let max_qr: i32 = (self.board_size - 1) as i32;
+
+            if q.abs() > max_qr || r.abs() > max_qr { continue; }
+
+            self.make_move(q, r);
+    }
     }
 
     pub fn print_state_pretty(&self) {
@@ -66,6 +122,5 @@ impl BoardState {
             println!();
         }
     }
-
 
 }
