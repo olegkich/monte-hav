@@ -3,9 +3,10 @@ mod board;
 use board::BoardState; 
 
 fn main() {
-    let mut state = BoardState::new(3);
+    let mut state = BoardState::new(5);
     state.initialize_state();
 
-    println!("\n{:?}", state);
+    state.print_state_pretty();
+
 }
 

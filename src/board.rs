@@ -1,4 +1,4 @@
-use std::{collections::HashMap, default};
+use std::{cmp::{max, min}, collections::HashMap, default};
 
 #[derive(Debug)]
 enum HexOwner {
@@ -36,10 +36,36 @@ impl BoardState {
                 let r: i32 = (row - (self.board_size - 1)) as i32;
                 self.state.insert((q, r), Hex { q, r, owner: HexOwner::None });
             } 
-
-            
         }
-
-        
     }
+
+    pub fn print_state_pretty(&self) {
+        let n = (self.board_size - 1) as i32; 
+        
+        for r in -n..=n {
+            let q_min = (-n).max(-r - n);
+            let q_max = n.min(-r + n);
+            let row_length = (q_max - q_min + 1) as usize;
+            
+            let max_length = (2 * self.board_size - 1) as usize;
+            let indent_count = max_length - row_length;
+            print!("{}", " ".repeat(indent_count));
+            
+            for q in q_min..=q_max {
+                let key = (q as i32, r as i32);
+                let symbol = match self.state.get(&key) {
+                    Some(hex) => match hex.owner {
+                        HexOwner::None => '.',
+                        HexOwner::P1 => 'X',
+                        HexOwner::P2 => 'O',
+                    },
+                    None => '.',
+                };
+                print!("{} ", symbol);
+            }
+            println!();
+        }
+    }
+
+
 }
