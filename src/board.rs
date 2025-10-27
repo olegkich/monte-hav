@@ -1,49 +1,78 @@
 use std::{cmp::{max, min}, collections::HashMap, default, io::stdin};
 
-#[derive(Debug)]
-enum HexOwner {
+use crate::win_detector::{self, WinDetector};
+
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+pub enum HexOwner {
     P1,
     P2,
     None
 }
 
 #[derive(Debug, PartialEq)]
-enum Turn {
+pub enum Player {
     P1,
     P2
 }
 
-#[derive(Debug)]
-struct Hex {
-    q: i32,
-    r: i32,
-    owner: HexOwner 
+impl From<&Player> for HexOwner {
+    fn from(player: &Player) -> Self {
+        match player {
+            Player::P1 => HexOwner::P1,
+            Player::P2 => HexOwner::P2,
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+pub struct Hex {
+    pub q: i32,
+    pub r: i32,
+    pub owner: HexOwner 
 }
 
 #[derive(Debug)]
 pub struct BoardState {
-    state: HashMap<(i32, i32), Hex>,
-    board_size: i8,
-    turn: Turn
+    pub state: HashMap<(i32, i32), Hex>,
+    pub board_size: i8,
+    turn: Player
 }
 
 impl BoardState {
     pub fn new(board_size: i8) -> Self {
-        Self {state: HashMap::new(), board_size, turn: Turn::P1 }
+        let state = BoardState::initialize_state(board_size);
+
+        Self {
+            state,
+            board_size,
+            turn: Player::P1
+            }
     }
 
-    pub fn initialize_state(&mut self) {
+    fn initialize_state(board_size: i8) -> HashMap<(i32, i32), Hex> {
+        let mut state = HashMap::new();
+
         // assume the board is a pointy-bottom hex
         // the tiles are flat-bottom hexes
-        let n: i8 = self.board_size * 2 - 1;
+        let n: i8 = board_size * 2 - 1;
 
         for col in 0..n {
             for row in 0..n {
-                let q: i32 = (col - (self.board_size - 1)) as i32;
-                let r: i32 = (row - (self.board_size - 1)) as i32;
-                self.state.insert((q, r), Hex { q, r, owner: HexOwner::None });
+                let q: i32 = (col - (board_size - 1)) as i32;
+                let r: i32 = (row - (board_size - 1)) as i32;
+                state.insert((q, r), Hex { q, r, owner: HexOwner::None });
             } 
         }
+
+        return state;
+    }
+
+    pub fn is_hex_in_bounds(&self, q: i32, r: i32) -> bool {
+        let max_qr: i32 = (self.board_size - 1) as i32;
+
+        if q.abs() > max_qr || r.abs() > max_qr { return false; }
+        
+        return true;
     }
 
     // --- DEBUG ---
@@ -51,28 +80,37 @@ impl BoardState {
     pub fn make_move(&mut self, q: i32, r: i32) {
         let hex_owner: HexOwner;
 
-        if self.turn == Turn::P1 { hex_owner = HexOwner::P1; }
+        if self.turn == Player::P1 { hex_owner = HexOwner::P1; }
         else {hex_owner =  HexOwner::P2;}
 
         self.state.insert((q, r), Hex { q, r, owner: hex_owner});
-        
+
         self.next_turn();
     }
 
     fn next_turn(&mut self) {
-        if self.turn == Turn::P1 { self.turn = Turn::P2; }
-        else { self.turn = Turn::P2; }
+        if self.turn == Player::P1 { self.turn = Player::P2; }
+        else { self.turn = Player::P2; }
     }
 
     fn clear_screen(&self) { print!("\x1B[2J\x1B[1;1H"); }
 
     pub fn start_game(&mut self) {
         loop {
-            self.clear_screen();
+            // commented for debugs
+            // self.clear_screen();
 
             print!("\n\n\n");
 
             self.print_state_pretty();
+
+            // TODO: move it elsewhere
+            let win_detector = WinDetector::from_board(self);
+
+            if win_detector.run(&self.turn) {
+                println!("player {:?} won", self.turn);
+                return;
+            }
 
             println!("Enter move with format: q r");
 
@@ -87,11 +125,11 @@ impl BoardState {
             let q: i32 = chars[0].trim().parse().unwrap();
             let r: i32 = chars[1].trim().parse().unwrap();
 
-            let max_qr: i32 = (self.board_size - 1) as i32;
-
-            if q.abs() > max_qr || r.abs() > max_qr { continue; }
+            if !self.is_hex_in_bounds(q, r) { continue; } 
 
             self.make_move(q, r);
+
+            
     }
     }
 

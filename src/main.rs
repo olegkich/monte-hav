@@ -1,15 +1,13 @@
 
 mod board;
-use std::io;
+mod win_detector;
 
 use board::BoardState; 
+use win_detector::WinDetector;
 
 fn main() {
-    let mut state = BoardState::new(5);
-    state.initialize_state();
-
-
-    state.start_game();
+    let mut board = BoardState::new(4);
+    board.start_game();
 
 }
 
