@@ -78,10 +78,9 @@ impl BoardState {
     // --- DEBUG ---
 
     pub fn make_move(&mut self, q: i32, r: i32) {
-        let hex_owner: HexOwner;
+        let hex_owner: HexOwner = HexOwner::from(&self.turn);
 
-        if self.turn == Player::P1 { hex_owner = HexOwner::P1; }
-        else {hex_owner =  HexOwner::P2;}
+        println!("player {:?}", hex_owner);
 
         self.state.insert((q, r), Hex { q, r, owner: hex_owner});
 
@@ -89,8 +88,10 @@ impl BoardState {
     }
 
     fn next_turn(&mut self) {
-        if self.turn == Player::P1 { self.turn = Player::P2; }
-        else { self.turn = Player::P2; }
+        self.turn = match self.turn {
+            Player::P1 => Player::P2,
+            Player::P2 => Player::P1,
+        };
     }
 
     fn clear_screen(&self) { print!("\x1B[2J\x1B[1;1H"); }

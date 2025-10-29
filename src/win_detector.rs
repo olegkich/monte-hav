@@ -11,13 +11,13 @@ pub struct WinDetector<'a>{
 impl<'a> WinDetector<'a> {
     pub fn from_board(board: &'a BoardState) -> Self {
         let corners = Self::initialize_corners(board.board_size);
-        let edges = Self::initialize_edges();
+        let edges = Self::initialize_edges(board.board_size);
 
         Self { board, corners, edges }
     }
 
     pub fn run(&self, player: &Player) -> bool {
-        return self.check_bridge(player)
+        return self.check_bridge(player) || self.check_fork(player)
     }
 
     // WANRING: can panic, there's no checking if a hex is out of bounds.
@@ -39,7 +39,7 @@ impl<'a> WinDetector<'a> {
 
     fn initialize_corners(board_size: i8) -> Vec<(i32, i32)> {
 
-        let max_qr: i32 = (board_size - 1).into();
+        let max_qr: i32 = (board_size) as i32 - 1;
 
         return vec![
             (-max_qr, 0),
@@ -51,8 +51,38 @@ impl<'a> WinDetector<'a> {
         ];        
     }
 
-    fn initialize_edges() -> Vec<(i32, i32)> {
-        return vec![];
+    fn initialize_edges(board_size: i8) -> Vec<(i32, i32)> {
+        let mut edges: Vec<(i32, i32)> = Vec::new();
+        let b = board_size as i32;
+        let r = b - 1;
+
+        // L, R
+        for i in 1..r { // skip corners
+            let left = (-r, i);
+            let right = (r, i - r);
+            edges.push(left);
+            edges.push(right);
+        }
+
+        // UR, LB
+        for i in 1..r { // skip corners
+            let ur = (i, -r);
+            let lb = (i - r, r);
+
+            edges.push(ur);
+            edges.push(lb);
+        }
+
+        // RB, UL
+        for i in 1..r { // skip corners
+            let rb = (i, r - i);
+            let ul = (i - r, -i);
+
+            edges.push(rb);
+            edges.push(ul);
+        }
+
+        edges
     }
 
     fn check_ring() {
@@ -60,34 +90,47 @@ impl<'a> WinDetector<'a> {
     }
 
     fn check_bridge(&self, player: &Player) -> bool {
-        let seen: HashSet<Hex> = HashSet::new();
-
-        for ((q, r), hex) in &self.board.state {
-            if seen.contains(hex) { continue; };
+        for ((_, _), hex) in &self.board.state {
 
             if hex.owner != HexOwner::from(player) { continue; };
 
-            let corners = self.findConnection(&hex.q, &hex.r, &player);
+            let (corners, _) = self.find_connection(&hex.q, &hex.r, &player);
             
-            println!("{:?}", corners);
-
             if corners.len() >= 2 { return true };
         };
 
         return false;
     }
     
-    fn findConnection(&self, start_q: &i32, start_r: &i32, player: &Player) -> HashSet<(i32, i32)> {
+    fn check_fork(&self, player: &Player) -> bool {
+         for ((_, _), hex) in &self.board.state {
+
+            if hex.owner != HexOwner::from(player) { continue; };
+
+            let (_, edges) = self.find_connection(&hex.q, &hex.r, &player);
+            
+            if edges.len() >= 3 { return true };
+        };
+
+        return false;
+    }
+
+    fn find_connection(&self, start_q: &i32, start_r: &i32, player: &Player) -> (HashSet<(i32, i32)>, HashSet<(i32, i32)>) {
         let mut visited: HashSet<(i32, i32)> = HashSet::new();
         let mut corners_found: HashSet<(i32, i32)> = HashSet::new();
+        let mut edges_found: HashSet<(i32, i32)> = HashSet::new();
 
         let mut queue: VecDeque<(i32, i32)> = VecDeque::from([(*start_q, *start_r)]);
 
         while queue.len() > 0 {
             let (q, r) = queue.pop_front().unwrap();
 
-            if (self.is_corner(&q, &r)) {
+            if self.is_corner(&q, &r) {
                 corners_found.insert((q, r));
+            }
+
+            if self.is_edge(&q, &r) {
+                edges_found.insert((q,r));
             }
 
             let neighbours = self.get_neighbours(&q, &r);
@@ -96,18 +139,16 @@ impl<'a> WinDetector<'a> {
                 if visited.contains(&(qn, rn)) { continue; }
                 
                 
-                if (self.get_hex_owner(&q, &r) == HexOwner::from(player)) {
+                if (self.get_hex_owner(&qn, &rn) == HexOwner::from(player)) {
                     visited.insert((qn, rn));
                     queue.push_front((qn, rn));
                 }                
             }
         }
-        return corners_found;
+        return (corners_found, edges_found);
     }
 
-    fn check_fork() {
-
-    }
+    
 
     fn is_corner(&self, q: &i32, r: &i32) -> bool {
         let mut is_corner: bool = false;
@@ -119,6 +160,18 @@ impl<'a> WinDetector<'a> {
         };
 
         return is_corner;
+    }
+
+    fn is_edge(&self, q: &i32, r: &i32) -> bool {
+        let mut is_edge: bool = false;
+
+        for edge in &self.edges {
+            if (*q, *r) == *edge {
+                is_edge = true;
+            }
+        };
+
+        return is_edge;
     }
 
     fn get_hex_owner(&self, q: &i32, r: &i32) -> HexOwner {
