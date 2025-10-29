@@ -17,7 +17,7 @@ impl<'a> WinDetector<'a> {
     }
 
     pub fn run(&self, player: &Player) -> bool {
-        return self.check_bridge(player) || self.check_fork(player)
+        return self.check_bridge(player) || self.check_fork(player) || self.check_ring(player);
     }
 
     // WANRING: can panic, there's no checking if a hex is out of bounds.
@@ -85,9 +85,56 @@ impl<'a> WinDetector<'a> {
         edges
     }
 
-    fn check_ring() {
+    pub fn check_ring(&self, player: &Player) -> bool {
+        for ((_, _), hex) in &self.board.state {
+            let owner = hex.owner;
 
+            if owner == HexOwner::None || owner != HexOwner::from(player) {
+                if !self.can_empty_cell_escape(hex.q, hex.r, player) {
+                    return true; 
+                }
+            }
+        }
+
+        false
     }
+
+    fn can_empty_cell_escape(&self, start_q: i32, start_r: i32, player: &Player) -> bool {
+        let mut visited: HashSet<(i32, i32)> = HashSet::new();
+        let mut queue: VecDeque<(i32, i32)> = VecDeque::new();
+
+        visited.insert((start_q, start_r));
+        queue.push_back((start_q, start_r));
+
+        while let Some((q, r)) = queue.pop_front() {
+            if self.is_on_board_boundary(q, r) {
+                return true;
+            }
+
+            for (nq, nr) in self.get_neighbours(&q, &r) {
+                if visited.contains(&(nq, nr)) {
+                    continue;
+                }
+
+                let owner = self.get_hex_owner(&nq, &nr);
+
+               
+                if owner != HexOwner::from(player) {
+                    visited.insert((nq, nr));
+                    queue.push_back((nq, nr));
+                }
+            }
+        }
+
+        false 
+    }
+
+    fn is_on_board_boundary(&self, q: i32, r: i32) -> bool {
+        let s = -q - r;
+        let n = self.board.board_size as i32 - 1;
+        q.abs() == n || r.abs() == n || s.abs() == n
+    }
+
 
     fn check_bridge(&self, player: &Player) -> bool {
         for ((_, _), hex) in &self.board.state {
