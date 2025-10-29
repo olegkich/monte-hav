@@ -80,8 +80,6 @@ impl BoardState {
     pub fn make_move(&mut self, q: i32, r: i32) {
         let hex_owner: HexOwner = HexOwner::from(&self.turn);
 
-        println!("player {:?}", hex_owner);
-
         self.state.insert((q, r), Hex { q, r, owner: hex_owner});
 
         self.next_turn();

@@ -85,6 +85,19 @@ impl<'a> WinDetector<'a> {
         edges
     }
 
+    fn edge_side(&self, q: i32, r: i32) -> Option<u8> {
+        let n = self.board.board_size as i32 - 1;
+        let s = -q - r;
+
+        if q == -n { Some(0) }
+        else if r == -n { Some(1) }
+        else if s == -n { Some(2) }
+        else if q == n { Some(3) }
+        else if r == n { Some(4) }
+        else if s == n { Some(5) }
+        else { None }
+    }
+
     pub fn check_ring(&self, player: &Player) -> bool {
         for ((_, _), hex) in &self.board.state {
             let owner = hex.owner;
@@ -165,6 +178,8 @@ impl<'a> WinDetector<'a> {
     fn find_connection(&self, start_q: &i32, start_r: &i32, player: &Player) -> (HashSet<(i32, i32)>, HashSet<(i32, i32)>) {
         let mut visited: HashSet<(i32, i32)> = HashSet::new();
         let mut corners_found: HashSet<(i32, i32)> = HashSet::new();
+        // stores only 1 edge for a side
+        // TODO: rename to sides
         let mut edges_found: HashSet<(i32, i32)> = HashSet::new();
 
         let mut queue: VecDeque<(i32, i32)> = VecDeque::from([(*start_q, *start_r)]);
@@ -176,8 +191,8 @@ impl<'a> WinDetector<'a> {
                 corners_found.insert((q, r));
             }
 
-            if self.is_edge(&q, &r) {
-                edges_found.insert((q,r));
+            if let Some(side) = self.edge_side(q, r) {
+                edges_found.insert((side as i32, 0));
             }
 
             let neighbours = self.get_neighbours(&q, &r);
