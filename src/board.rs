@@ -1,4 +1,5 @@
-use std::{cmp::{max, min}, collections::HashMap, default, io::stdin};
+use core::error;
+use std::{cmp::{max, min}, collections::HashMap, default, io::stdin, string};
 
 use crate::win_detector::{self, WinDetector};
 
@@ -9,7 +10,7 @@ pub enum HexOwner {
     None
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Player {
     P1,
     P2
@@ -35,7 +36,7 @@ pub struct Hex {
 pub struct BoardState {
     pub state: HashMap<(i32, i32), Hex>,
     pub board_size: i8,
-    turn: Player
+    pub turn: Player,
 }
 
 impl BoardState {
@@ -45,7 +46,7 @@ impl BoardState {
         Self {
             state,
             board_size,
-            turn: Player::P1
+            turn: Player::P1,
             }
     }
 
@@ -64,9 +65,13 @@ impl BoardState {
             } 
         }
 
+        
+
         return state;
     }
 
+
+    // ---  API FOR MCTS --- 
     pub fn is_hex_in_bounds(&self, q: i32, r: i32) -> bool {
         let max_qr: i32 = (self.board_size - 1) as i32;
 
@@ -75,7 +80,38 @@ impl BoardState {
         return true;
     }
 
-    // --- DEBUG ---
+    pub fn legal_moves(&self) -> Vec<(i32, i32)> {
+        let mut moves: Vec<(i32, i32)> = vec![];
+        
+        for hex in self.state.values() {
+            if hex.owner == HexOwner::None {
+                moves.push((hex.q, hex.r));
+            }
+        };
+
+        moves
+    }
+
+    pub fn is_terminal(&self) -> bool {
+        return WinDetector::from_board(self).run(&self.turn);
+    }
+
+
+    pub fn apply_move(&mut self, q: i32, r: i32) -> Result<(i32, i32), &'static str> {
+        if !self.is_hex_in_bounds(q, r) {
+            return Err("move is out of bounds");
+        }
+
+        let hex_owner: HexOwner = HexOwner::from(&self.turn);
+
+        self.state.insert((q, r), Hex { q, r, owner: hex_owner});
+
+        self.next_turn();
+
+        Ok((q, r))
+    }
+
+    // --- DEBUG AND GAME LOGIC, TO BE MOVED LATER ---
 
     pub fn make_move(&mut self, q: i32, r: i32) {
         let hex_owner: HexOwner = HexOwner::from(&self.turn);

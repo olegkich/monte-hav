@@ -1,6 +1,7 @@
 
 mod board;
 mod win_detector;
+mod mcts;
 
 use board::BoardState; 
 use win_detector::WinDetector;
