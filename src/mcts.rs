@@ -1,6 +1,8 @@
 
+use core::panic;
+
 use crate::{board::{self, BoardState}, win_detector};
-use rand::Rng;
+use rand::{Rng, rng};
 
 struct Node {
     state: BoardState,
@@ -59,7 +61,17 @@ impl MCTS {
 
         for _ in 0..self.max_iter {
             let node_index = self.select(root_index);
-            self.expand(node_index);
+
+            if self.nodes[node_index].is_terminal {
+                let reward = self.simulate(node_index);
+                self.back_propagation(reward, node_index);
+                continue;
+            }
+
+            let expanded_index = self.expand(node_index);
+            let reward = self.simulate(expanded_index);
+
+            self.back_propagation(reward, expanded_index);
         }
         
     }
@@ -88,19 +100,88 @@ impl MCTS {
         return self.select(best_index);
     }
 
-    fn expand(&mut self, node_index: usize) {
-
-        if let Some(node) = self.nodes.get_mut(node_index) {
-            let moves = node.state.legal_moves();
+    fn expand(&mut self, node_index: usize) -> usize {
 
 
+        let moves = {
+            let node = &mut self.nodes[node_index];
+            node.state.legal_moves()
         };
+
+        if moves.is_empty() {
+            panic!("no legal moves available")
+        }
+
+        let r_index = self.get_random_move_index(moves.len());
+        let mut new_state = self.nodes[node_index].state.clone();
+    
+
+        // WARNING: no checking for now, used unwrap! (assumes it will always find a legal move which is risky)
+        new_state.apply_move(moves[r_index]).unwrap();
+    
+
+        let new_node = Node::new(new_state, Some(node_index));
+
+        // get index before push so it's less by 1
+        let new_index = self.nodes.len();
+
+        self.nodes.push(new_node);
+
+        self.nodes[node_index].children.push(new_index);
+
+        return new_index
+       
+    }
+
+    fn simulate(&self, start_index: usize) -> f32  {
+        if let Some(node) = self.nodes.get(start_index) {
+            let mut board = node.state.clone();
+            
+            while !board.is_terminal() {
+                let moves = board.legal_moves();
+
+                let r_index = self.get_random_move_index(moves.len());
+
+                let r_move = moves[r_index];
+
+                 // WARNING: no checking for now, used unwrap! (assumes it will always find a legal move which is risky)
+                board.apply_move(r_move).unwrap();
+            };
+
+            let winner = board.get_winner();
+
+            return match winner {
+                Some(p) if p == self.nodes[start_index].player_to_move => 1.0,
+                Some(_) => -1.0,
+                None => 0.0,
+            }
+        }
+
+        else {
+            panic!("no node to simulate.");
+        }
+    }
+
+    fn back_propagation(&mut self, mut reward: f32, expanded_index: usize) {
+        let mut current_index = Some(expanded_index);
+
+        while let Some(index) = current_index {
+            let node = &mut self.nodes[index];
+            node.visits += 1;
+            node.total_reward += reward;
+
+            reward = -reward;
+
+            current_index = node.parent_index;
+}
     }
 
     fn calculate_uct(&self, node: &Node, parent_visits: u32) -> f32 {
         if node.visits == 0 {
-            // to encourage exploring unvisited nodes
             return f32::INFINITY;
+        }
+        if parent_visits == 0 {
+            return 0.0;
         }
 
         let w_i = node.total_reward;
@@ -108,6 +189,10 @@ impl MCTS {
         let c = self.exploration_constant;
 
         (w_i / n_i) + c * (((parent_visits as f32).ln() / n_i).sqrt())
-    }
+        }
 
+
+    fn get_random_move_index(&self, max: usize) -> usize {
+        rand::rng().random_range(0..max)
+    }
 }

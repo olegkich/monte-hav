@@ -1,4 +1,4 @@
-use core::error;
+use core::{error, panic};
 use std::{cmp::{max, min}, collections::HashMap, default, io::stdin, string};
 
 use crate::win_detector::{self, WinDetector};
@@ -32,7 +32,7 @@ pub struct Hex {
     pub owner: HexOwner 
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct BoardState {
     pub state: HashMap<(i32, i32), Hex>,
     pub board_size: i8,
@@ -72,6 +72,7 @@ impl BoardState {
 
 
     // ---  API FOR MCTS --- 
+    
     pub fn is_hex_in_bounds(&self, q: i32, r: i32) -> bool {
         let max_qr: i32 = (self.board_size - 1) as i32;
 
@@ -92,12 +93,42 @@ impl BoardState {
         moves
     }
 
+    // TODO: clean up duplicates
     pub fn is_terminal(&self) -> bool {
         return WinDetector::from_board(self).run(&self.turn);
     }
 
+    pub fn get_winner(&self) -> Option<Player> {
+        let detector = win_detector::WinDetector::from_board(self);
+        if detector.run(&Player::P1) {
+            Some(Player::P1)
+        } else if detector.run(&Player::P2) {
+            Some(Player::P2)
+        } else {
+            None
+        }
+    }
 
-    pub fn apply_move(&mut self, q: i32, r: i32) -> Result<(i32, i32), &'static str> {
+    // WARNING: draws are not handled
+    // pub fn evaluate(&self) -> f32 {
+    //     let result = self.is_terminal();
+
+    //     if !result {
+    //         panic!("Evaluation is not possible if the board is not terminal.");
+    //     }
+
+    //     if self.turn == Player::P1 {
+    //         return 1.0;
+    //     };
+
+    //     if self.turn == Player::P2 {
+    //         return -1.0;
+    //     };
+
+    //     return 0.0;
+    // }
+
+    pub fn apply_move(&mut self, (q, r): (i32, i32)) -> Result<(i32, i32), &'static str> {
         if !self.is_hex_in_bounds(q, r) {
             return Err("move is out of bounds");
         }
