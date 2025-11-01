@@ -8,7 +8,7 @@ use win_detector::WinDetector;
 
 fn main() {
     let mut board = BoardState::new(4);
-    board.start_game();
+    board.start_game_vs_ai();
     
 }
 

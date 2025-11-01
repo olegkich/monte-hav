@@ -1,7 +1,8 @@
 
 use core::panic;
+use std::collections::HashMap;
 
-use crate::{board::{self, BoardState}, win_detector};
+use crate::{board::{self, BoardState, Hex, Player}, win_detector};
 use rand::{Rng, rng};
 
 struct Node {
@@ -13,10 +14,11 @@ struct Node {
     uct: f32,
     is_terminal: bool,
     player_to_move: board::Player,
+    last_move: Option<(i32, i32)>
 }
 
 impl Node {
-    pub fn new(state: BoardState, parent_index: Option<usize>) -> Self {
+    pub fn new(state: BoardState, parent_index: Option<usize>, last_move: Option<(i32, i32)>) -> Self {
         let is_terminal = is_terminal(&state);
         let player_to_move = state.turn;
 
@@ -28,7 +30,8 @@ impl Node {
             total_reward: 0.0,
             uct: 0.0,
             is_terminal,
-            player_to_move: player_to_move
+            player_to_move: player_to_move,
+            last_move
         }
     }
 }
@@ -39,14 +42,14 @@ fn is_terminal(state: &BoardState) -> bool {
         return win_detector.run(&board::Player::P1) || win_detector.run(&board::Player::P2)
     }
 
-struct MCTS {
+pub struct MCTS {
     nodes: Vec<Node>,
     exploration_constant: f32,
     max_iter: i32,
 }
 
 impl MCTS {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             nodes: vec![],
             exploration_constant: (2.0 as f32).sqrt(),
@@ -54,10 +57,52 @@ impl MCTS {
         }
     }
 
-    fn search(&mut self, start_state: BoardState) {
+    pub fn run(&mut self, start_state: BoardState) -> (i32, i32) {
+        let root_index = self.search(start_state);
+        return self.best_move(root_index);
+    }
+
+    fn best_move(&self, root_index: usize) -> (i32, i32){
+        
+        // WARNING: unwrap
+        let root = self.nodes.get(root_index).unwrap();
+
+        if root.children.is_empty() {
+            panic!("root node has no children after search()");
+        };
+
+        let mut best_visits = 0;
+        let mut best_index = root.children[0];
+
+        for child_index in &root.children {
+            let child = self.nodes.get(*child_index).unwrap();
+
+            if child.visits > best_visits {
+                best_visits = child.visits;
+                best_index = *child_index;
+            }
+        };
+
+        let best_move = self.nodes.get(best_index).unwrap().last_move;
+
+        match best_move {
+            Some(m) => return m,
+            None => panic!("no best move found") 
+        };
+
+        
+    }
+
+    fn search(&mut self, start_state: BoardState) -> usize {
       
+        if is_terminal(&start_state) {
+            let root_index = self.nodes.len();
+            self.nodes.push(Node::new(start_state, None, None));
+            return root_index;
+        }
+
         let root_index = self.nodes.len();
-        self.nodes.push(Node::new(start_state, None));
+        self.nodes.push(Node::new(start_state, None, None));
 
         for _ in 0..self.max_iter {
             let node_index = self.select(root_index);
@@ -73,6 +118,8 @@ impl MCTS {
 
             self.back_propagation(reward, expanded_index);
         }
+
+        return root_index
         
     }
 
@@ -120,7 +167,7 @@ impl MCTS {
         new_state.apply_move(moves[r_index]).unwrap();
     
 
-        let new_node = Node::new(new_state, Some(node_index));
+        let new_node = Node::new(new_state, Some(node_index), Some(moves[r_index]));
 
         // get index before push so it's less by 1
         let new_index = self.nodes.len();
@@ -139,23 +186,24 @@ impl MCTS {
             
             while !board.is_terminal() {
                 let moves = board.legal_moves();
-
                 let r_index = self.get_random_move_index(moves.len());
-
                 let r_move = moves[r_index];
-
-                 // WARNING: no checking for now, used unwrap! (assumes it will always find a legal move which is risky)
                 board.apply_move(r_move).unwrap();
             };
 
             let winner = board.get_winner();
 
+            let last_player = match node.player_to_move {
+                Player::P1 => Player::P2,
+                Player::P2 => Player::P1,
+            };
+
             return match winner {
-                Some(p) if p == self.nodes[start_index].player_to_move => 1.0,
+                Some(p) if p == last_player => 1.0,
                 Some(_) => -1.0,
                 None => 0.0,
-            }
-        }
+            };
+        }   
 
         else {
             panic!("no node to simulate.");
@@ -173,7 +221,7 @@ impl MCTS {
             reward = -reward;
 
             current_index = node.parent_index;
-}
+        }
     }
 
     fn calculate_uct(&self, node: &Node, parent_visits: u32) -> f32 {

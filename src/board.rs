@@ -1,7 +1,7 @@
 use core::{error, panic};
 use std::{cmp::{max, min}, collections::HashMap, default, io::stdin, string};
 
-use crate::win_detector::{self, WinDetector};
+use crate::{mcts, win_detector::{self, WinDetector}};
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub enum HexOwner {
@@ -107,6 +107,50 @@ impl BoardState {
         } else {
             None
         }
+    }
+
+    pub fn start_game_vs_ai(&mut self) {
+        loop {
+            // commented for debugs
+            // self.clear_screen();
+
+            print!("\n\n\n");
+
+            self.print_state_pretty();
+
+            // TODO: move it elsewhere
+            let win_detector = WinDetector::from_board(self);
+
+            if win_detector.run(&self.turn) {
+                println!("player {:?} won", self.turn);
+                return;
+            }
+
+            println!("Enter move with format: q r");
+
+            let mut input: String = String::new();
+
+            stdin().read_line(&mut input).unwrap();
+
+            if input == "x" { break };
+
+            let chars: Vec<&str> = input.split_whitespace().collect();
+
+            let q: i32 = chars[0].trim().parse().unwrap();
+            let r: i32 = chars[1].trim().parse().unwrap();
+
+            self.apply_move((q, r)).unwrap();
+
+            print!("AI is thinking...");
+
+            let mut ai = mcts::MCTS::new();
+
+            let best_move = ai.run(self.clone());
+    
+            println!("AI plays: ({}, {})", best_move.0, best_move.1);
+
+            self.apply_move(best_move).unwrap();
+    }
     }
 
     // WARNING: draws are not handled
