@@ -1,5 +1,5 @@
 use core::{error, panic};
-use std::{cmp::{max, min}, collections::HashMap, default, io::stdin, string};
+use std::{cmp::{max, min}, collections::HashMap, default, io::stdin, string, thread, time::Duration};
 
 use crate::{mcts, win_detector::{self, WinDetector}};
 
@@ -55,17 +55,16 @@ impl BoardState {
 
         // assume the board is a pointy-bottom hex
         // the tiles are flat-bottom hexes
-        let n: i8 = board_size * 2 - 1;
+        let max_qr: i32 = (board_size - 1) as i32;
 
-        for col in 0..n {
-            for row in 0..n {
-                let q: i32 = (col - (board_size - 1)) as i32;
-                let r: i32 = (row - (board_size - 1)) as i32;
-                state.insert((q, r), Hex { q, r, owner: HexOwner::None });
-            } 
+        for q in -max_qr..=max_qr {
+            for r in -max_qr..=max_qr {
+                let s = -q - r;
+                if s.abs() <= max_qr {
+                    state.insert((q, r), Hex { q, r, owner: HexOwner::None });
+                }
+            }
         }
-
-        
 
         return state;
     }
@@ -95,7 +94,8 @@ impl BoardState {
 
     // TODO: clean up duplicates
     pub fn is_terminal(&self) -> bool {
-        return WinDetector::from_board(self).run(&self.turn);
+        let detector = WinDetector::from_board(self);
+        detector.run(&Player::P1) || detector.run(&Player::P2)
     }
 
     pub fn get_winner(&self) -> Option<Player> {
@@ -109,6 +109,46 @@ impl BoardState {
         }
     }
 
+    pub fn start_game_ai_vs_ai(&mut self) {
+        self.apply_move((0, 0)).unwrap();
+
+        loop {
+
+            self.print_state_pretty();
+            
+            let mut ai1 = mcts::MCTS::new();
+
+            let best_move1 = ai1.run(self.clone());
+    
+            println!("AI 1 plays: ({}, {})", best_move1.0, best_move1.1);
+
+            self.apply_move(best_move1).unwrap();
+
+            if self.is_terminal() {
+                println!("AI 1 won");
+                break;
+            }
+
+            let mut ai2 = mcts::MCTS::new();
+
+            let best_move2 = ai2.run(self.clone());
+    
+            println!("AI 2 plays: ({}, {})", best_move2.0, best_move2.1);
+
+            self.apply_move(best_move2).unwrap();
+
+            if self.is_terminal() {
+                println!("AI 2 won");
+                break;
+            }
+            
+            
+        }
+
+        self.print_state_pretty();
+
+    }
+
     pub fn start_game_vs_ai(&mut self) {
         loop {
             // commented for debugs
@@ -120,11 +160,6 @@ impl BoardState {
 
             // TODO: move it elsewhere
             let win_detector = WinDetector::from_board(self);
-
-            if win_detector.run(&self.turn) {
-                println!("player {:?} won", self.turn);
-                return;
-            }
 
             println!("Enter move with format: q r");
 
@@ -141,6 +176,11 @@ impl BoardState {
 
             self.apply_move((q, r)).unwrap();
 
+            if self.is_terminal() {
+                println!("player {:?} won", self.turn);
+                return;
+            }
+
             print!("AI is thinking...");
 
             let mut ai = mcts::MCTS::new();
@@ -150,7 +190,13 @@ impl BoardState {
             println!("AI plays: ({}, {})", best_move.0, best_move.1);
 
             self.apply_move(best_move).unwrap();
-    }
+
+            if self.is_terminal() {
+                println!("player {:?} won", self.turn);
+                return;
+            }
+            
+        }
     }
 
     // WARNING: draws are not handled
@@ -174,7 +220,16 @@ impl BoardState {
 
     pub fn apply_move(&mut self, (q, r): (i32, i32)) -> Result<(i32, i32), &'static str> {
         if !self.is_hex_in_bounds(q, r) {
-            return Err("move is out of bounds");
+        return Err("move is out of bounds");
+        }
+
+        match self.state.get(&(q, r)) {
+            Some(hex) => {
+                if hex.owner != HexOwner::None {
+                    return Err("cell already occupied");
+                }
+            },
+            None => return Err("invalid cell"),
         }
 
         let hex_owner: HexOwner = HexOwner::from(&self.turn);
@@ -268,6 +323,12 @@ impl BoardState {
                 print!("{} ", symbol);
             }
             println!();
+        }
+    }
+
+    pub fn print_state_less_pretty(&self) {
+        for (q, r) in self.state.keys() {
+            println!("{} {}", q, r);
         }
     }
 

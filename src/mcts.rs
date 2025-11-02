@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use crate::{board::{self, BoardState, Hex, Player}, win_detector};
 use rand::{Rng, rng};
 
+#[derive(Debug)]
 struct Node {
     state: BoardState,
     parent_index: Option<usize>,
@@ -83,6 +84,8 @@ impl MCTS {
             }
         };
 
+        println!("found best move with {} visits", best_visits);
+
         let best_move = self.nodes.get(best_index).unwrap().last_move;
 
         match best_move {
@@ -118,6 +121,8 @@ impl MCTS {
 
             self.back_propagation(reward, expanded_index);
         }
+
+        println!("looked through {} moves", self.nodes.len());
 
         return root_index
         
@@ -159,40 +164,54 @@ impl MCTS {
             panic!("no legal moves available")
         }
 
-        let r_index = self.get_random_move_index(moves.len());
-        let mut new_state = self.nodes[node_index].state.clone();
-    
+        // Create ALL children at once
+        for &move_coords in &moves {
+            let mut new_state = self.nodes[node_index].state.clone();
+            new_state.apply_move(move_coords).unwrap();
+            
+            let new_node = Node::new(new_state, Some(node_index), Some(move_coords));
+            let new_index = self.nodes.len();
+            
+            self.nodes.push(new_node);
+            self.nodes[node_index].children.push(new_index);
+        }
 
-        // WARNING: no checking for now, used unwrap! (assumes it will always find a legal move which is risky)
-        new_state.apply_move(moves[r_index]).unwrap();
-    
-
-        let new_node = Node::new(new_state, Some(node_index), Some(moves[r_index]));
-
-        // get index before push so it's less by 1
-        let new_index = self.nodes.len();
-
-        self.nodes.push(new_node);
-
-        self.nodes[node_index].children.push(new_index);
-
-        return new_index
+        let children = &self.nodes[node_index].children;
+        let random_idx = self.get_random_move_index(children.len());
+        children[random_idx]
        
     }
 
     fn simulate(&self, start_index: usize) -> f32  {
         if let Some(node) = self.nodes.get(start_index) {
+
+            // in case expanded_node is already terminal
+            if node.is_terminal {
+                let winner = node.state.get_winner();
+                return match winner {
+                    Some(p) if p == node.player_to_move => -1.0,
+                    Some(_) => 1.0,
+                    None => 0.0,
+                };
+            }
+
+
             let mut board = node.state.clone();
             
+            let mut n_moves = 0;
+
             while !board.is_terminal() {
                 let moves = board.legal_moves();
                 let r_index = self.get_random_move_index(moves.len());
                 let r_move = moves[r_index];
                 board.apply_move(r_move).unwrap();
+
+                n_moves += 1;
             };
 
             let winner = board.get_winner();
 
+            // since board contains the turn after the node was expanded.
             let last_player = match node.player_to_move {
                 Player::P1 => Player::P2,
                 Player::P2 => Player::P1,

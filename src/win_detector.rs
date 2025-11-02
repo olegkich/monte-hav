@@ -237,8 +237,14 @@ impl<'a> WinDetector<'a> {
     }
 
     fn get_hex_owner(&self, q: &i32, r: &i32) -> HexOwner {
-        // WARNING: this might cause issues. Probably will fix later on. 
-        if !self.board.is_hex_in_bounds(*q, *r) { return HexOwner::None}
-        self.board.state.get(&(*q, *r)).unwrap().owner
+            if !self.board.is_hex_in_bounds(*q, *r) {
+            return HexOwner::None;
+        }
+
+        self.board
+            .state
+            .get(&(*q, *r))
+            .map(|h| h.owner)
+            .unwrap_or(HexOwner::None)
     }
 }
