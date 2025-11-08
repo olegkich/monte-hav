@@ -1,0 +1,112 @@
+    . . . . . 
+   . . . . . . 
+  . . . . . . . 
+ . . . . . . . . 
+. . . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . . . . 
+    . . . . . 
+looked through 583670 moves
+found best move with 406 visits
+AI 1 plays: (0, 4) in 112.35s
+looked through 573609 moves
+found best move with 413 visits
+AI 2 plays: (-3, 0) in 112.35s
+    . . . . . 
+   . . . . . . 
+  . . . . . . . 
+ . . . . . . . . 
+. O . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . . . . 
+    . . . . X 
+looked through 563508 moves
+found best move with 556 visits
+AI 1 plays: (4, -4) in 106.51s
+looked through 553351 moves
+found best move with 464 visits
+AI 2 plays: (-1, -2) in 106.51s
+    . . . . X 
+   . . . . . . 
+  . O . . . . . 
+ . . . . . . . . 
+. O . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . . . . 
+    . . . . X 
+looked through 543294 moves
+found best move with 436 visits
+AI 1 plays: (3, -3) in 124.79s
+looked through 533185 moves
+found best move with 473 visits
+AI 2 plays: (-2, -1) in 124.79s
+    . . . . X 
+   . . . . X . 
+  . O . . . . . 
+ . O . . . . . . 
+. O . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . . . . 
+    . . . . X 
+looked through 523067 moves
+found best move with 837 visits
+AI 1 plays: (0, -4) in 121.91s
+looked through 512931 moves
+found best move with 1026 visits
+AI 2 plays: (0, -3) in 121.91s
+    X . . . X 
+   . O . . X . 
+  . O . . . . . 
+ . O . . . . . . 
+. O . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . . . . 
+    . . . . X 
+looked through 501676 moves
+found best move with 3481 visits
+AI 1 plays: (1, -4) in 117.01s
+looked through 492573 moves
+found best move with 1536 visits
+AI 2 plays: (1, -3) in 117.01s
+    X X . . X 
+   . O O . X . 
+  . O . . . . . 
+ . O . . . . . . 
+. O . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . . . . 
+    . . . . X 
+looked through 454171 moves
+found best move with 6927 visits
+AI 1 plays: (2, -4) in 90.40s
+looked through 424131 moves
+found best move with 783 visits
+AI 2 plays: (3, -4) in 90.40s
+    X X X O X 
+   . O O . X . 
+  . O . . . . . 
+ . O . . . . . . 
+. O . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . . . . 
+    . . . . X 
+looked through 61605 moves
+found best move with 8690 visits
+AI 1 plays: (2, -3) in 11.30s
+AI 1 won
+    X X X O X 
+   . O O X X . 
+  . O . . . . . 
+ . O . . . . . . 
+. O . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . . . . 
+    . . . . X 

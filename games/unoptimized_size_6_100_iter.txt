@@ -1,0 +1,488 @@
+     . . . . . . 
+    . . . . . . . 
+   . . . . . . . . 
+  . . . . . . . . . 
+ . . . . . . . . . . 
+. . . . . . . . . . . 
+ . . . . . . . . . . 
+  . . . . . . . . . 
+   . . . . . . . . 
+    . . . . . . . 
+     . . . . . . 
+looked through 8993 moves
+found best move with 2 visits
+AI 1 plays: (0, -3) in 3.86s
+looked through 8892 moves
+found best move with 2 visits
+AI 2 plays: (-1, 2) in 3.86s
+     . . . . . . 
+    . . . . . . . 
+   . . X . . . . . 
+  . . . . . . . . . 
+ . . . . . . . . . . 
+. . . . . . . . . . . 
+ . . . . . . . . . . 
+  . . . . O . . . . 
+   . . . . . . . . 
+    . . . . . . . 
+     . . . . . . 
+looked through 8791 moves
+found best move with 2 visits
+AI 1 plays: (-2, -1) in 3.61s
+looked through 8690 moves
+found best move with 2 visits
+AI 2 plays: (3, -1) in 3.61s
+     . . . . . . 
+    . . . . . . . 
+   . . X . . . . . 
+  . . . . . . . . . 
+ . . X . . . . O . . 
+. . . . . . . . . . . 
+ . . . . . . . . . . 
+  . . . . O . . . . 
+   . . . . . . . . 
+    . . . . . . . 
+     . . . . . . 
+looked through 8589 moves
+found best move with 2 visits
+AI 1 plays: (5, -5) in 3.39s
+looked through 8488 moves
+found best move with 2 visits
+AI 2 plays: (1, -3) in 3.39s
+     . . . . . X 
+    . . . . . . . 
+   . . X O . . . . 
+  . . . . . . . . . 
+ . . X . . . . O . . 
+. . . . . . . . . . . 
+ . . . . . . . . . . 
+  . . . . O . . . . 
+   . . . . . . . . 
+    . . . . . . . 
+     . . . . . . 
+looked through 8387 moves
+found best move with 2 visits
+AI 1 plays: (0, 4) in 3.35s
+looked through 8287 moves
+found best move with 2 visits
+AI 2 plays: (-4, 0) in 3.35s
+     . . . . . X 
+    . . . . . . . 
+   . . X O . . . . 
+  . . . . . . . . . 
+ . . X . . . . O . . 
+. O . . . . . . . . . 
+ . . . . . . . . . . 
+  . . . . O . . . . 
+   . . . . . . . . 
+    . . . . . X . 
+     . . . . . . 
+looked through 8185 moves
+found best move with 2 visits
+AI 1 plays: (1, 0) in 3.19s
+looked through 8084 moves
+found best move with 2 visits
+AI 2 plays: (-1, 1) in 3.19s
+     . . . . . X 
+    . . . . . . . 
+   . . X O . . . . 
+  . . . . . . . . . 
+ . . X . . . . O . . 
+. O . . . . X . . . . 
+ . . . . O . . . . . 
+  . . . . O . . . . 
+   . . . . . . . . 
+    . . . . . X . 
+     . . . . . . 
+looked through 7984 moves
+found best move with 2 visits
+AI 1 plays: (3, -3) in 3.03s
+looked through 7882 moves
+found best move with 2 visits
+AI 2 plays: (4, -4) in 3.03s
+     . . . . . X 
+    . . . . . O . 
+   . . X O . X . . 
+  . . . . . . . . . 
+ . . X . . . . O . . 
+. O . . . . X . . . . 
+ . . . . O . . . . . 
+  . . . . O . . . . 
+   . . . . . . . . 
+    . . . . . X . 
+     . . . . . . 
+looked through 7782 moves
+found best move with 2 visits
+AI 1 plays: (1, 1) in 3.06s
+looked through 7680 moves
+found best move with 2 visits
+AI 2 plays: (4, -3) in 3.06s
+     . . . . . X 
+    . . . . . O . 
+   . . X O . X O . 
+  . . . . . . . . . 
+ . . X . . . . O . . 
+. O . . . . X . . . . 
+ . . . . O . X . . . 
+  . . . . O . . . . 
+   . . . . . . . . 
+    . . . . . X . 
+     . . . . . . 
+looked through 7579 moves
+found best move with 2 visits
+AI 1 plays: (1, 3) in 3.08s
+looked through 7478 moves
+found best move with 2 visits
+AI 2 plays: (5, -1) in 3.08s
+     . . . . . X 
+    . . . . . O . 
+   . . X O . X O . 
+  . . . . . . . . . 
+ . . X . . . . O . O 
+. O . . . . X . . . . 
+ . . . . O . X . . . 
+  . . . . O . . . . 
+   . . . . . . X . 
+    . . . . . X . 
+     . . . . . . 
+looked through 7377 moves
+found best move with 2 visits
+AI 1 plays: (4, -1) in 2.81s
+looked through 7277 moves
+found best move with 2 visits
+AI 2 plays: (-2, -3) in 2.81s
+     . . . . . X 
+    . . . . . O . 
+   O . X O . X O . 
+  . . . . . . . . . 
+ . . X . . . . O X O 
+. O . . . . X . . . . 
+ . . . . O . X . . . 
+  . . . . O . . . . 
+   . . . . . . X . 
+    . . . . . X . 
+     . . . . . . 
+looked through 7176 moves
+found best move with 2 visits
+AI 1 plays: (0, -2) in 2.80s
+looked through 7074 moves
+found best move with 2 visits
+AI 2 plays: (1, 2) in 2.80s
+     . . . . . X 
+    . . . . . O . 
+   O . X O . X O . 
+  . . . X . . . . . 
+ . . X . . . . O X O 
+. O . . . . X . . . . 
+ . . . . O . X . . . 
+  . . . . O . O . . 
+   . . . . . . X . 
+    . . . . . X . 
+     . . . . . . 
+looked through 6974 moves
+found best move with 2 visits
+AI 1 plays: (-5, 1) in 2.59s
+looked through 6872 moves
+found best move with 2 visits
+AI 2 plays: (0, -1) in 2.59s
+     . . . . . X 
+    . . . . . O . 
+   O . X O . X O . 
+  . . . X . . . . . 
+ . . X . O . . O X O 
+. O . . . . X . . . . 
+ X . . . O . X . . . 
+  . . . . O . O . . 
+   . . . . . . X . 
+    . . . . . X . 
+     . . . . . . 
+looked through 6771 moves
+found best move with 2 visits
+AI 1 plays: (-5, 3) in 2.57s
+looked through 6671 moves
+found best move with 2 visits
+AI 2 plays: (-1, -4) in 2.57s
+     . . . . . X 
+    O . . . . O . 
+   O . X O . X O . 
+  . . . X . . . . . 
+ . . X . O . . O X O 
+. O . . . . X . . . . 
+ X . . . O . X . . . 
+  . . . . O . O . . 
+   X . . . . . X . 
+    . . . . . X . 
+     . . . . . . 
+looked through 6569 moves
+found best move with 2 visits
+AI 1 plays: (2, -3) in 2.50s
+looked through 6468 moves
+found best move with 3 visits
+AI 2 plays: (5, -3) in 2.50s
+     . . . . . X 
+    O . . . . O . 
+   O . X O X X O O 
+  . . . X . . . . . 
+ . . X . O . . O X O 
+. O . . . . X . . . . 
+ X . . . O . X . . . 
+  . . . . O . O . . 
+   X . . . . . X . 
+    . . . . . X . 
+     . . . . . . 
+looked through 6368 moves
+found best move with 2 visits
+AI 1 plays: (-2, -2) in 2.40s
+looked through 6267 moves
+found best move with 2 visits
+AI 2 plays: (3, 0) in 2.40s
+     . . . . . X 
+    O . . . . O . 
+   O . X O X X O O 
+  . X . X . . . . . 
+ . . X . O . . O X O 
+. O . . . . X . O . . 
+ X . . . O . X . . . 
+  . . . . O . O . . 
+   X . . . . . X . 
+    . . . . . X . 
+     . . . . . . 
+looked through 6166 moves
+found best move with 3 visits
+AI 1 plays: (4, 1) in 2.29s
+looked through 6065 moves
+found best move with 3 visits
+AI 2 plays: (1, -4) in 2.29s
+     . . . . . X 
+    O . O . . O . 
+   O . X O X X O O 
+  . X . X . . . . . 
+ . . X . O . . O X O 
+. O . . . . X . O . . 
+ X . . . O . X . . X 
+  . . . . O . O . . 
+   X . . . . . X . 
+    . . . . . X . 
+     . . . . . . 
+looked through 5964 moves
+found best move with 3 visits
+AI 1 plays: (-2, 0) in 2.07s
+looked through 5863 moves
+found best move with 3 visits
+AI 2 plays: (-3, 5) in 2.07s
+     . . . . . X 
+    O . O . . O . 
+   O . X O X X O O 
+  . X . X . . . . . 
+ . . X . O . . O X O 
+. O . X . . X . O . . 
+ X . . . O . X . . X 
+  . . . . O . O . . 
+   X . . . . . X . 
+    . . . . . X . 
+     . . O . . . 
+looked through 5761 moves
+found best move with 3 visits
+AI 1 plays: (2, 2) in 2.34s
+looked through 5661 moves
+found best move with 3 visits
+AI 2 plays: (-3, 2) in 2.34s
+     . . . . . X 
+    O . O . . O . 
+   O . X O X X O O 
+  . X . X . . . . . 
+ . . X . O . . O X O 
+. O . X . . X . O . . 
+ X . . . O . X . . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . . . . X . 
+     . . O . . . 
+looked through 5560 moves
+found best move with 4 visits
+AI 1 plays: (-3, 4) in 2.35s
+looked through 5459 moves
+found best move with 3 visits
+AI 2 plays: (3, -2) in 2.35s
+     . . . . . X 
+    O . O . . O . 
+   O . X O X X O O 
+  . X . X . . O . . 
+ . . X . O . . O X O 
+. O . X . . X . O . . 
+ X . . . O . X . . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . . X . 
+     . . O . . . 
+looked through 5358 moves
+found best move with 4 visits
+AI 1 plays: (-4, 1) in 1.96s
+looked through 5256 moves
+found best move with 5 visits
+AI 2 plays: (1, -2) in 1.96s
+     . . . . . X 
+    O . O . . O . 
+   O . X O X X O O 
+  . X . X O . O . . 
+ . . X . O . . O X O 
+. O . X . . X . O . . 
+ X X . . O . X . . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . . X . 
+     . . O . . . 
+looked through 5155 moves
+found best move with 4 visits
+AI 1 plays: (-1, -2) in 1.90s
+looked through 5055 moves
+found best move with 3 visits
+AI 2 plays: (-4, -1) in 1.90s
+     . . . . . X 
+    O . O . . O . 
+   O . X O X X O O 
+  . X X X O . O . . 
+ O . X . O . . O X O 
+. O . X . . X . O . . 
+ X X . . O . X . . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . . X . 
+     . . O . . . 
+looked through 4953 moves
+found best move with 5 visits
+AI 1 plays: (-2, 5) in 2.11s
+looked through 4853 moves
+found best move with 3 visits
+AI 2 plays: (-5, 5) in 2.11s
+     . . . . . X 
+    O . O . . O . 
+   O . X O X X O O 
+  . X X X O . O . . 
+ O . X . O . . O X O 
+. O . X . . X . O . . 
+ X X . . O . X . . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . . X . 
+     O . O X . . 
+looked through 4751 moves
+found best move with 5 visits
+AI 1 plays: (-1, -1) in 1.96s
+looked through 4651 moves
+found best move with 3 visits
+AI 2 plays: (1, -5) in 1.96s
+     . O . . . X 
+    O . O . . O . 
+   O . X O X X O O 
+  . X X X O . O . . 
+ O . X X O . . O X O 
+. O . X . . X . O . . 
+ X X . . O . X . . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . . X . 
+     O . O X . . 
+looked through 4549 moves
+found best move with 4 visits
+AI 1 plays: (-3, -2) in 1.68s
+looked through 4449 moves
+found best move with 3 visits
+AI 2 plays: (4, -5) in 1.68s
+     . O . . O X 
+    O . O . . O . 
+   O . X O X X O O 
+  X X X X O . O . . 
+ O . X X O . . O X O 
+. O . X . . X . O . . 
+ X X . . O . X . . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . . X . 
+     O . O X . . 
+looked through 4348 moves
+found best move with 5 visits
+AI 1 plays: (-3, 1) in 1.54s
+looked through 4247 moves
+found best move with 3 visits
+AI 2 plays: (5, 0) in 1.54s
+     . O . . O X 
+    O . O . . O . 
+   O . X O X X O O 
+  X X X X O . O . . 
+ O . X X O . . O X O 
+. O . X . . X . O . O 
+ X X X . O . X . . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . . X . 
+     O . O X . . 
+looked through 4146 moves
+found best move with 3 visits
+AI 1 plays: (2, -1) in 1.51s
+looked through 3802 moves
+found best move with 4 visits
+AI 2 plays: (0, -4) in 1.51s
+     . O . . O X 
+    O O O . . O . 
+   O . X O X X O O 
+  X X X X O . O . . 
+ O . X X O . X O X O 
+. O . X . . X . O . O 
+ X X X . O . X . . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . . X . 
+     O . O X . . 
+looked through 3905 moves
+found best move with 4 visits
+AI 1 plays: (2, 1) in 1.29s
+looked through 3498 moves
+found best move with 3 visits
+AI 2 plays: (0, 0) in 1.29s
+     . O . . O X 
+    O O O . . O . 
+   O . X O X X O O 
+  X X X X O . O . . 
+ O . X X O . X O X O 
+. O . X . O X . O . O 
+ X X X . O . X X . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . . X . 
+     O . O X . . 
+looked through 3372 moves
+found best move with 5 visits
+AI 1 plays: (3, -4) in 1.14s
+looked through 3314 moves
+found best move with 3 visits
+AI 2 plays: (0, -5) in 1.14s
+     O O . . O X 
+    O O O . X O . 
+   O . X O X X O O 
+  X X X X O . O . . 
+ O . X X O . X O X O 
+. O . X . O X . O . O 
+ X X X . O . X X . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . . X . 
+     O . O X . . 
+looked through 3015 moves
+found best move with 6 visits
+AI 1 plays: (-1, 4) in 1.10s
+looked through 3096 moves
+found best move with 4 visits
+AI 2 plays: (2, -2) in 1.10s
+AI 2 won
+     O O . . O X 
+    O O O . X O . 
+   O . X O X X O O 
+  X X X X O O O . . 
+ O . X X O . X O X O 
+. O . X . O X . O . O 
+ X X X . O . X X . X 
+  . . O . O . O X . 
+   X . . . . . X . 
+    . . X . X X . 
+     O . O X . . 

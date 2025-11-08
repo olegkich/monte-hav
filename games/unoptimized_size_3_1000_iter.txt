@@ -1,0 +1,121 @@
+GAME 1
+
+  . . . 
+ . . . . 
+. . X . .
+ . . . .
+  . . .
+looked through 143790 moves
+found best move with 1396 visits
+AI 1 plays: (0, 2) in 3.11s
+looked through 129008 moves
+found best move with 1793 visits
+AI 2 plays: (2, 0) in 3.11s
+  . . . 
+ . . . . 
+. . X . X
+ . . . .
+  . . O
+looked through 79192 moves
+found best move with 7008 visits
+AI 1 plays: (-2, 2) in 1.83s
+looked through 49828 moves
+found best move with 5715 visits
+AI 2 plays: (-1, 2) in 1.83s
+  . . . 
+ . . . .
+. . X . X
+ . . . .
+  O X O
+looked through 31754 moves
+found best move with 9147 visits
+AI 1 plays: (-2, 0) in 796.03ms
+looked through 22581 moves
+found best move with 3118 visits
+AI 2 plays: (-2, 1) in 796.03ms
+  . . .
+ . . . .
+O . X . X
+ X . . .
+  O X O
+looked through 9980 moves
+found best move with 9812 visits
+AI 1 plays: (-1, 1) in 305.57ms
+looked through 8270 moves
+found best move with 1023 visits
+AI 2 plays: (1, 1) in 305.57ms
+  . . .
+ . . . .
+O . X . X
+ X O . X
+  O X O
+looked through 1876 moves
+found best move with 4843 visits
+AI 1 plays: (0, 1) in 118.18ms
+AI 1 won
+  . . .
+ . . . .
+O . X . X
+ X O O X
+  O X O
+
+GAME 2
+
+  . . . 
+ . . . . 
+. . . . .
+ . . . .
+  . . .
+looked through 154595 moves
+found best move with 1807 visits
+AI 1 plays: (0, 2) in 3.38s
+looked through 141961 moves
+found best move with 1484 visits
+AI 2 plays: (-2, 2) in 3.38s
+  . . . 
+ . . . . 
+. . . . .
+ . . . .
+  O . X
+looked through 103879 moves
+found best move with 7115 visits
+AI 1 plays: (2, 0) in 2.27s
+looked through 84210 moves
+found best move with 5695 visits
+AI 2 plays: (1, 1) in 2.27s
+  . . . 
+ . . . . 
+. . . . X
+ . . . O
+  O . X
+looked through 76487 moves
+found best move with 6150 visits
+AI 1 plays: (2, -2) in 1.76s
+looked through 42566 moves
+found best move with 3179 visits
+AI 2 plays: (2, -1) in 1.76s
+  . . X
+ . . . O
+. . . . X
+ . . . O
+  O . X
+looked through 26400 moves
+found best move with 8877 visits
+AI 1 plays: (1, 0) in 598.14ms
+looked through 17493 moves
+found best move with 951 visits
+AI 2 plays: (1, -1) in 598.14ms
+  . . X
+ . . O O
+. . . X X
+ . . . O
+  O . X
+looked through 2946 moves
+found best move with 9629 visits
+AI 1 plays: (0, 1) in 91.40ms
+AI 1 won
+  . . X
+ . . O O
+. . . X X
+ . . X O
+  O . X

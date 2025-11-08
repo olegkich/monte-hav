@@ -4,6 +4,7 @@ use std::collections::HashMap;
 
 use crate::{board::{self, BoardState, Hex, Player}, win_detector};
 use rand::{Rng, rng};
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
 #[derive(Debug)]
 struct Node {
@@ -60,7 +61,50 @@ impl MCTS {
 
     pub fn run(&mut self, start_state: BoardState) -> (i32, i32) {
         let root_index = self.search(start_state);
+        
         return self.best_move(root_index);
+    }
+
+    
+    pub fn run_parallel(&self, start_state: BoardState, threads: usize, iters: usize) -> (i32, i32) {
+        // each thread builds its own smaller tree
+        // for each thread return a hashmap which contains { move: visit count }  
+        let results: Vec<HashMap<(i32, i32), u32>> = (0..threads).into_par_iter().map(|_| {
+            
+            let mut local_mcts = MCTS {
+                nodes: vec![],
+                exploration_constant: self.exploration_constant,
+                max_iter: iters as i32,
+            };
+
+
+            let root_index = local_mcts.search(start_state.clone());
+
+            let root = &local_mcts.nodes[root_index];
+
+            let mut map = HashMap::new();
+
+            for &child_index in &root.children {
+                let child = &local_mcts.nodes[child_index];
+
+                if let Some(m) = child.last_move {
+                    *map.entry(m).or_insert(0) += child.visits;
+                }
+            }
+            map
+        }).collect();
+
+        // merge
+        let mut global_visits = HashMap::new();
+        
+        for r in results {
+            for (m, v) in r {
+                *global_visits.entry(m).or_insert(0) += v;
+            }
+        }
+
+        let best = global_visits.into_iter().max_by_key(|&(_, v)| v).unwrap().0;
+        best
     }
 
     fn best_move(&self, root_index: usize) -> (i32, i32){

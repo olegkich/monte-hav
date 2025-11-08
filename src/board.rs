@@ -1,5 +1,5 @@
 use core::{error, panic};
-use std::{cmp::{max, min}, collections::HashMap, default, io::stdin, string, thread, time::Duration};
+use std::{cmp::{max, min}, collections::HashMap, default, io::stdin, string, thread, time::{Duration, Instant}};
 
 use crate::{mcts, win_detector::{self, WinDetector}};
 
@@ -109,8 +109,7 @@ impl BoardState {
         }
     }
 
-    pub fn start_game_ai_vs_ai(&mut self) {
-        self.apply_move((0, 0)).unwrap();
+    pub fn start_game_ai_vs_ai(&mut self, iters: usize, threads: Option<usize>) {
 
         loop {
 
@@ -118,9 +117,18 @@ impl BoardState {
             
             let mut ai1 = mcts::MCTS::new();
 
-            let best_move1 = ai1.run(self.clone());
+            let start = Instant::now();
+
+            let best_move1;
+
+            match threads {
+                None => best_move1 = ai1.run(self.clone()),
+                Some(threads) => best_move1 = ai1.run_parallel(self.clone(), threads, iters)
+            }
     
-            println!("AI 1 plays: ({}, {})", best_move1.0, best_move1.1);
+            let duration = start.elapsed();
+
+            println!("AI 1 plays: ({}, {}) in {:.2?}", best_move1.0, best_move1.1, duration);
 
             self.apply_move(best_move1).unwrap();
 
@@ -131,9 +139,14 @@ impl BoardState {
 
             let mut ai2 = mcts::MCTS::new();
 
-            let best_move2 = ai2.run(self.clone());
+            let best_move2;
     
-            println!("AI 2 plays: ({}, {})", best_move2.0, best_move2.1);
+            match threads {
+                None => best_move2 = ai2.run(self.clone()),
+                Some(threads) => best_move2 = ai2.run_parallel(self.clone(), threads, iters)
+            }
+
+            println!("AI 2 plays: ({}, {}) in {:.2?}", best_move2.0, best_move2.1, duration);
 
             self.apply_move(best_move2).unwrap();
 
