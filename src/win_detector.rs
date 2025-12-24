@@ -1,6 +1,6 @@
-use std::{collections::{HashSet, VecDeque}, sync::Arc};
+use std::{collections::{HashSet, VecDeque}};
 
-use crate::board::{self, BoardState, Hex, HexOwner, Player};
+use crate::board::{BoardState, Hex, HexOwner, Player};
 
 pub struct WinDetector<'a>{
     board: &'a BoardState,
@@ -201,7 +201,7 @@ impl<'a> WinDetector<'a> {
                 if visited.contains(&(qn, rn)) { continue; }
                 
                 
-                if (self.get_hex_owner(&qn, &rn) == HexOwner::from(player)) {
+                if self.get_hex_owner(&qn, &rn) == HexOwner::from(player) {
                     visited.insert((qn, rn));
                     queue.push_front((qn, rn));
                 }                
@@ -209,8 +209,6 @@ impl<'a> WinDetector<'a> {
         }
         return (corners_found, edges_found);
     }
-
-    
 
     fn is_corner(&self, q: &i32, r: &i32) -> bool {
         let mut is_corner: bool = false;
@@ -222,18 +220,6 @@ impl<'a> WinDetector<'a> {
         };
 
         return is_corner;
-    }
-
-    fn is_edge(&self, q: &i32, r: &i32) -> bool {
-        let mut is_edge: bool = false;
-
-        for edge in &self.edges {
-            if (*q, *r) == *edge {
-                is_edge = true;
-            }
-        };
-
-        return is_edge;
     }
 
     fn get_hex_owner(&self, q: &i32, r: &i32) -> HexOwner {

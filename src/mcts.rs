@@ -2,19 +2,16 @@
 use core::panic;
 use std::collections::HashMap;
 
-use crate::{board::{self, BoardState, Hex, Player}, win_detector};
-use rand::{Rng, rng};
+use crate::{board::{self, BoardState, Player}, win_detector};
+use rand::{Rng};
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
-// TODO: (MAX PRIORITY) add an instant win check because the AI misses winning moves on low iters.
-#[derive(Debug)]
 struct Node {
     state: BoardState,
     parent_index: Option<usize>,
     children: Vec<usize>,
     visits: u32,
     total_reward: f32,
-    uct: f32,
     is_terminal: bool,
     player_to_move: board::Player,
     last_move: Option<(i32, i32)>
@@ -31,7 +28,6 @@ impl Node {
             children: vec![],
             visits: 0,
             total_reward: 0.0,
-            uct: 0.0,
             is_terminal,
             player_to_move: player_to_move,
             last_move
@@ -45,6 +41,7 @@ fn is_terminal(state: &BoardState) -> bool {
         return win_detector.run(&board::Player::P1) || win_detector.run(&board::Player::P2)
     }
 
+// TODO: (MAX PRIORITY) add an instant win check because the AI misses winning moves on low iters.
 pub struct MCTS {
     nodes: Vec<Node>,
     exploration_constant: f32,
@@ -187,7 +184,7 @@ impl MCTS {
             if let Some(child_node) = self.nodes.get(*index) {
                 let uct = self.calculate_uct(child_node, node.visits);
                 
-                if (uct > best_uct) {
+                if uct > best_uct {
                     best_uct = uct;
                     best_index = *index;
                 }
@@ -243,15 +240,12 @@ impl MCTS {
 
             let mut board = node.state.clone();
             
-            let mut n_moves = 0;
-
             while !board.is_terminal() {
                 let moves = board.legal_moves();
                 let r_index = self.get_random_move_index(moves.len());
                 let r_move = moves[r_index];
                 board.apply_move(r_move).unwrap();
 
-                n_moves += 1;
             };
 
             let winner = board.get_winner();
