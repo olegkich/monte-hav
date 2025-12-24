@@ -6,6 +6,7 @@ use crate::{board::{self, BoardState, Hex, Player}, win_detector};
 use rand::{Rng, rng};
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
+// TODO: (MAX PRIORITY) add an instant win check because the AI misses winning moves on low iters.
 #[derive(Debug)]
 struct Node {
     state: BoardState,
@@ -305,5 +306,101 @@ impl MCTS {
 
     fn get_random_move_index(&self, max: usize) -> usize {
         rand::rng().random_range(0..max)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::board::{BoardState, Hex, HexOwner, Player};
+
+    #[test]
+    // The root node (the state from which a move will be made)
+    // is considered players 2s move, even though player 1 is about to move
+    // So in case of a sequence: (Win in 1 for P1) -> (P1 makes the winning move, state becomes terminal)
+    // The first node should obviously have NEG_INFINIGTY reward since it's a loss for P2 
+    // Writing this down for future, the backprop sign flipping confuses me
+    fn test_negamax_reward_attribution() {
+        // SCENARIO: P1 is about to win.
+        // force MCTS to expand the winning node and check the rewards.
+        
+        let mut board = BoardState::new(3); // Small board
+        // Set up a P1 Bridge 
+        board.state.insert((0, -2), Hex { q: 0, r: -2, owner: HexOwner::P1 });
+        board.state.insert((1, -2), Hex { q: 1, r: -2, owner: HexOwner::P1 });
+        board.state.insert((0, 0),  Hex { q: 0, r: 0,  owner: HexOwner::P1 });
+        board.state.insert((0, 1),  Hex { q: 0, r: 1,  owner: HexOwner::P1 });
+        
+        let mut mcts = MCTS::new();
+        
+        let root_idx = mcts.search(board.clone());
+        let root_node = &mcts.nodes[root_idx];
+        assert_eq!(root_node.player_to_move, Player::P1);
+
+        let mut winning_state = board.clone();
+        winning_state.apply_move((2, -2)).unwrap();
+        
+        assert!(winning_state.is_terminal());
+        assert_eq!(winning_state.get_winner(), Some(Player::P1));
+
+        let child_node = Node::new(winning_state, Some(root_idx), Some((0, 2)));
+        mcts.nodes.push(child_node);
+        let child_idx = mcts.nodes.len() - 1;
+        mcts.nodes[root_idx].children.push(child_idx);
+
+        let reward = mcts.simulate(child_idx);
+        
+        // Simulate should return +1 because the move-maker - P1 won.
+        assert_eq!(reward, 1.0, "Simulate should return +1 for a win by the previous player");
+
+        mcts.back_propagation(reward, child_idx);
+
+        let child_node = &mcts.nodes[child_idx];
+        let root_node = &mcts.nodes[root_idx];
+
+        assert!(child_node.total_reward > 0.0, "Winning move must have positive value!");
+        assert!(root_node.total_reward < 0.0, "Root value should be inverted relative to child");
+    }
+
+    #[test]
+    fn test_mcts_finds_immediate_win_in_1_ply() {
+        let mut board = BoardState::new(3);
+
+        // build a bridge
+        let setup_moves = vec![(0, -2), (0, -1), (0, 0), (0, 1)];
+        
+        for (q, r) in setup_moves {
+            board.state.insert((q, r), Hex { q, r, owner: HexOwner::P1 });
+        }
+
+        let mcts = MCTS::new();
+        // Run enough iterations to ensure it sees the win
+        // Since it's a direct win, even 50 iters should find it if logic is correct
+        // because the winning node will have infinite/max reward.
+        let best_move = mcts.run_parallel(board, 6, 1000); 
+
+        println!("AI's best move: {:?}", best_move);
+
+        assert_eq!(best_move, (0, 2), "AI should find the immediate winning move (0, 2)");
+    }
+
+    #[test]
+    fn test_mcts_blocks_immediate_loss() {
+        let mut board = BoardState::new(3);
+        
+        // again, a bridge
+        let threat_moves = vec![(0, -2), (0, -1), (0, 0), (0, 1)];
+
+        for (q, r) in threat_moves {
+            board.state.insert((q, r), Hex { q, r, owner: HexOwner::P2 });
+        }
+
+        // It is P1s turn
+        // P1 SHOULD play (0, 2) to stop the bridge.
+        
+        let mcts = MCTS::new();
+        let best_move = mcts.run_parallel(board, 6, 1000);
+
+        assert_eq!(best_move, (0, 2), "AI should block the opponent's winning move");
     }
 }

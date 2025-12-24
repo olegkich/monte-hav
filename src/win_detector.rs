@@ -248,3 +248,68 @@ impl<'a> WinDetector<'a> {
             .unwrap_or(HexOwner::None)
     }
 }
+
+#[test]
+fn test_ring_detection() {
+    let mut board = BoardState::new(4);
+    
+    // Create a small ring around (0,0)
+    let ring_moves = vec![
+        (1, -1), (1, 0), (0, 1), 
+        (-1, 1), (-1, 0), (0, -1)
+    ];
+
+    for (q, r) in ring_moves {
+        board.state.insert((q, r), Hex { q, r, owner: HexOwner::P1 });
+    }
+
+    // Place an empty or enemy hex inside to ensure it's a real ring
+    board.state.insert((0, 0), Hex { q: 0, r: 0, owner: HexOwner::P2 });
+
+    let detector = WinDetector::from_board(&board);
+    assert!(detector.check_ring(&Player::P1), "Should detect a ring for P1");
+    assert!(!detector.check_ring(&Player::P2), "Should NOT detect a ring for P2");
+}
+
+#[test]
+fn test_bridge_detection() {
+    let mut board = BoardState::new(3); 
+    
+    let bridge_moves = vec![
+        (0, -2), // Corner
+        (0, -1),
+        (1, -1),
+        (2, -2) // Corner
+    ];
+
+    for (q, r) in bridge_moves {
+        board.state.insert((q, r), Hex { q, r, owner: HexOwner::P1 });
+    }
+
+    let detector = WinDetector::from_board(&board);
+    // Note: detector.run calls check_bridge internally
+    assert!(detector.run(&Player::P1), "Should detect a bridge for P1");
+}
+
+#[test]
+fn test_fork_detection() {
+    let mut board = BoardState::new(3);
+    
+    let fork_moves = vec![
+        // center
+        (0,0), 
+        // Top Edge
+        (0, -1), (1, -2), 
+        // Bottom Right Edge
+        (0, 1), (1, 1),
+        // Top Right Edge
+        (1, -1), (2, -1) 
+    ];
+
+    for (q, r) in fork_moves {
+        board.state.insert((q, r), Hex { q, r, owner: HexOwner::P1 });
+    }
+
+    let detector = WinDetector::from_board(&board);
+    assert!(detector.run(&Player::P1), "Should detect a fork for P1");
+}

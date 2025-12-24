@@ -212,28 +212,10 @@ impl BoardState {
         }
     }
 
-    // WARNING: draws are not handled
-    // pub fn evaluate(&self) -> f32 {
-    //     let result = self.is_terminal();
-
-    //     if !result {
-    //         panic!("Evaluation is not possible if the board is not terminal.");
-    //     }
-
-    //     if self.turn == Player::P1 {
-    //         return 1.0;
-    //     };
-
-    //     if self.turn == Player::P2 {
-    //         return -1.0;
-    //     };
-
-    //     return 0.0;
-    // }
 
     pub fn apply_move(&mut self, (q, r): (i32, i32)) -> Result<(i32, i32), &'static str> {
         if !self.is_hex_in_bounds(q, r) {
-        return Err("move is out of bounds");
+            return Err("move is out of bounds");
         }
 
         match self.state.get(&(q, r)) {
@@ -345,4 +327,34 @@ impl BoardState {
         }
     }
 
+}
+
+
+#[test]
+fn test_out_of_bounds() {
+    let mut board = BoardState::new(3);
+    let result = board.apply_move((10, 10));
+    assert!(result.is_err(), "Should return error for an out of bounds move");
+}
+
+#[test]
+fn test_turn_switching() {
+    let mut board = BoardState::new(3);
+    assert_eq!(board.turn, Player::P1);
+    
+    board.apply_move((0, 0)).unwrap();
+    assert_eq!(board.turn, Player::P2);
+    
+    board.apply_move((0, 1)).unwrap();
+    assert_eq!(board.turn, Player::P1);
+}
+
+#[test]
+fn test_prevent_overwrite() {
+    let mut board = BoardState::new(3);
+    board.apply_move((0, 0)).unwrap(); 
+    
+    let result = board.apply_move((0, 0)); 
+    assert!(result.is_err(), "Should not allow moving on occupied tile");
+    assert_eq!(board.turn, Player::P2, "Turn should not change on invalid move");
 }
