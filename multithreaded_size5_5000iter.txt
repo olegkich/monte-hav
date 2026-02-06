@@ -1,0 +1,371 @@
+    . . . . . 
+   . . . . . . 
+  . . . . . . . 
+ . . . . . . . . 
+. . . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . . . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (4, -4) in 30.12s
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 2 plays: (0, -3) in 30.12s
+    . . . . X 
+   . O . . . . 
+  . . . . . . . 
+ . . . . . . . . 
+. . . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . . . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (-1, -2) in 28.40s
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 2 plays: (-1, 3) in 28.40s
+    . . . . X 
+   . O . . . . 
+  . X . . . . . 
+ . . . . . . . . 
+. . . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (4, -3) in 26.85s
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 2 plays: (-1, -1) in 26.85s
+    . . . . X 
+   . O . . . X 
+  . X . . . . . 
+ . . O . . . . . 
+. . . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (0, -2) in 24.95s
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 2 plays: (3, -1) in 24.95s
+    . . . . X 
+   . O . . . X 
+  . X X . . . . 
+ . . O . . . O . 
+. . . . . . . . . 
+ . . . . . . . . 
+  . . . . . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (-1, -3) in 24.93s
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 2 plays: (-1, 2) in 24.93s
+    . . . . X 
+   X O . . . X 
+  . X X . . . . 
+ . . O . . . O . 
+. . . . . . . . . 
+ . . . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (1, -3) in 21.62s
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 2 plays: (2, -3) in 21.62s
+    . . . . X 
+   X O X O . X 
+  . X X . . . . 
+ . . O . . . O . 
+. . . . . . . . . 
+ . . . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (0, -4) in 19.80s
+looked through 4892 moves
+looked through 4896 moves
+looked through 4900 moves
+looked through 4895 moves
+looked through 4894 moves
+looked through 4898 moves
+AI 2 plays: (1, -4) in 19.80s
+    X O . . X 
+   X O X O . X 
+  . X X . . . . 
+ . . O . . . O . 
+. . . . . . . . . 
+ . . . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (2, -4) in 19.74s
+looked through 4896 moves
+looked through 4903 moves
+looked through 4878 moves
+looked through 4910 moves
+looked through 4914 moves
+looked through 4925 moves
+AI 2 plays: (3, -4) in 19.74s
+    X O X O X 
+   X O X O . X 
+  . X X . . . . 
+ . . O . . . O . 
+. . . . . . . . . 
+ . . . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (-2, -1) in 20.19s
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 2 plays: (-3, 0) in 20.19s
+    X O X O X 
+   X O X O . X 
+  . X X . . . . 
+ . X O . . . O . 
+. O . . . . . . . 
+ . . . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (-2, 0) in 20.29s
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 2 plays: (-3, 1) in 20.29s
+    X O X O X 
+   X O X O . X 
+  . X X . . . . 
+ . X O . . . O . 
+. O X . . . . . . 
+ . O . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (-3, -1) in 18.23s
+looked through 4879 moves
+looked through 4862 moves
+looked through 4878 moves
+looked through 4842 moves
+looked through 4900 moves
+looked through 4898 moves
+AI 2 plays: (-4, 0) in 18.23s
+    X O X O X 
+   X O X O . X 
+  . X X . . . . 
+ X X O . . . O . 
+O O X . . . . . . 
+ . O . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5000 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (-1, 0) in 19.35s
+looked through 4731 moves
+looked through 4753 moves
+looked through 4751 moves
+looked through 4723 moves
+looked through 4762 moves
+looked through 4813 moves
+AI 2 plays: (0, -1) in 19.35s
+    X O X O X 
+   X O X O . X 
+  . X X . . . . 
+ X X O O . . O . 
+O O X X . . . . . 
+ . O . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    . . . . . 
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 1 plays: (0, 0) in 26.52s
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+looked through 5001 moves
+AI 2 plays: (-4, 4) in 26.52s
+    X O X O X 
+   X O X O . X 
+  . X X . . . . 
+ X X O O . . O . 
+O O X X X . . . . 
+ . O . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    O . . . . 
+looked through 4986 moves
+looked through 4977 moves
+looked through 5000 moves
+looked through 4983 moves
+looked through 5000 moves
+looked through 5001 moves
+AI 1 plays: (1, -1) in 19.32s
+looked through 4556 moves
+looked through 4507 moves
+looked through 4537 moves
+looked through 4584 moves
+looked through 4582 moves
+looked through 4747 moves
+AI 2 plays: (1, -2) in 19.32s
+    X O X O X 
+   X O X O . X 
+  . X X O . . . 
+ X X O O X . O . 
+O O X X X . . . . 
+ . O . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    O . . . . 
+looked through 4978 moves
+looked through 4976 moves
+looked through 4975 moves
+looked through 4997 moves
+looked through 4951 moves
+looked through 4992 moves
+AI 1 plays: (2, -2) in 17.37s
+looked through 4092 moves
+looked through 4081 moves
+looked through 4101 moves
+looked through 4105 moves
+looked through 4122 moves
+looked through 4221 moves
+AI 2 plays: (3, -2) in 17.37s
+    X O X O X 
+   X O X O . X 
+  . X X O X O . 
+ X X O O X . O . 
+O O X X X . . . . 
+ . O . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    O . . . . 
+looked through 526 moves
+looked through 575 moves
+looked through 612 moves
+looked through 568 moves
+looked through 625 moves
+looked through 698 moves
+AI 1 plays: (3, -3) in 2.26s
+AI 1 won
+    X O X O X 
+   X O X O X X 
+  . X X O X O . 
+ X X O O X . O . 
+O O X X X . . . . 
+ . O . . . . . . 
+  . . . O . . . 
+   . . . O . . 
+    O . . . . 

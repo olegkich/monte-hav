@@ -5,12 +5,18 @@ mod display;
 mod game;
 mod win_detector;
 mod mcts;
+mod server;
 
 use board::BoardState;
 use game::GameRunner;
+use server::Server;
 
-fn main() {
-    let mut board = BoardState::new(5);
-    board.start_game_ai_vs_ai(500, Some(6));
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    // let mut board = BoardState::new(5);
+    // board.start_game_ai_vs_ai(5000, Some(6));
+
+    let server = Server::new(4000);
+    server.start().await
 }
 
