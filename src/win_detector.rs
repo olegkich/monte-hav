@@ -1,6 +1,7 @@
 use std::{collections::{HashSet, VecDeque}};
 
-use crate::board::{BoardState, Hex, HexOwner, Player};
+use crate::board::BoardState;
+use crate::types::{Hex, HexOwner, Player};
 
 pub struct WinDetector<'a>{
     board: &'a BoardState,

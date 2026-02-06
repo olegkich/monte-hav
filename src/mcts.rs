@@ -1,59 +1,74 @@
-
 use core::panic;
 use std::collections::HashMap;
 
-use crate::{board::{self, BoardState, Player}, win_detector};
-use rand::{Rng};
+use crate::board::BoardState;
+use crate::types::Player;
+use crate::win_detector;
+use rand::Rng;
+use rand::rngs::SmallRng;
+use rand::SeedableRng;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
 struct Node {
     state: BoardState,
     parent_index: Option<usize>,
     children: Vec<usize>,
+    unexpanded_moves: Vec<(i32, i32)>,
     visits: u32,
     total_reward: f32,
     is_terminal: bool,
-    player_to_move: board::Player,
+    player_to_move: Player,
     last_move: Option<(i32, i32)>
 }
 
 impl Node {
     pub fn new(state: BoardState, parent_index: Option<usize>, last_move: Option<(i32, i32)>) -> Self {
-        let is_terminal = is_terminal(&state);
+        let is_terminal = is_terminal_for_last_player(&state);
         let player_to_move = state.turn;
+        let unexpanded_moves = if is_terminal {
+            vec![]
+        } else {
+            state.legal_moves()
+        };
 
         Self  {
             state,
             parent_index,
             children: vec![],
+            unexpanded_moves,
             visits: 0,
             total_reward: 0.0,
             is_terminal,
-            player_to_move: player_to_move,
+            player_to_move,
             last_move
         }
     }
 }
 
-fn is_terminal(state: &BoardState) -> bool {
-        let win_detector = win_detector::WinDetector::from_board(state);
-    
-        return win_detector.run(&board::Player::P1) || win_detector.run(&board::Player::P2)
-    }
+fn is_terminal_for_last_player(state: &BoardState) -> bool {
+    let last_player = match state.turn {
+        Player::P1 => Player::P2,
+        Player::P2 => Player::P1,
+    };
+    let win_detector = win_detector::WinDetector::from_board(state);
+    win_detector.run(&last_player)
+}
 
 // TODO: (MAX PRIORITY) add an instant win check because the AI misses winning moves on low iters.
 pub struct MCTS {
     nodes: Vec<Node>,
     exploration_constant: f32,
     max_iter: i32,
+    rng: SmallRng,
 }
 
 impl MCTS {
     pub fn new() -> Self {
         Self {
             nodes: vec![],
-            exploration_constant: (2.0 as f32).sqrt(),
-            max_iter: 1000
+            exploration_constant: (2.0_f32).sqrt(),
+            max_iter: 1000,
+            rng: SmallRng::from_os_rng(),
         }
     }
 
@@ -73,6 +88,7 @@ impl MCTS {
                 nodes: vec![],
                 exploration_constant: self.exploration_constant,
                 max_iter: iters as i32,
+                rng: SmallRng::from_os_rng(),
             };
 
 
@@ -140,7 +156,7 @@ impl MCTS {
 
     fn search(&mut self, start_state: BoardState) -> usize {
       
-        if is_terminal(&start_state) {
+        if is_terminal_for_last_player(&start_state) {
             let root_index = self.nodes.len();
             self.nodes.push(Node::new(start_state, None, None));
             return root_index;
@@ -173,6 +189,10 @@ impl MCTS {
     fn select(&self, start_index: usize) -> usize {
         let node = &self.nodes[start_index];
 
+        if !node.unexpanded_moves.is_empty() {
+            return start_index;
+        }
+
         if node.children.is_empty() {
             return start_index;
         }
@@ -195,76 +215,61 @@ impl MCTS {
     }
 
     fn expand(&mut self, node_index: usize) -> usize {
-
-
-        let moves = {
-            let node = &mut self.nodes[node_index];
-            node.state.legal_moves()
-        };
-
-        if moves.is_empty() {
+        let unexpanded_len = self.nodes[node_index].unexpanded_moves.len();
+        
+        if unexpanded_len == 0 {
             panic!("no legal moves available")
         }
 
-        // Create ALL children at once
-        for &move_coords in &moves {
-            let mut new_state = self.nodes[node_index].state.clone();
-            new_state.apply_move(move_coords).unwrap();
-            
-            let new_node = Node::new(new_state, Some(node_index), Some(move_coords));
-            let new_index = self.nodes.len();
-            
-            self.nodes.push(new_node);
-            self.nodes[node_index].children.push(new_index);
-        }
+        let random_idx = self.get_random_move_index(unexpanded_len);
+        let move_coords = self.nodes[node_index].unexpanded_moves.swap_remove(random_idx);
 
-        let children = &self.nodes[node_index].children;
-        let random_idx = self.get_random_move_index(children.len());
-        children[random_idx]
-       
+        let mut new_state = self.nodes[node_index].state.clone();
+        new_state.apply_move(move_coords).unwrap();
+        
+        let new_node = Node::new(new_state, Some(node_index), Some(move_coords));
+        let new_index = self.nodes.len();
+        
+        self.nodes.push(new_node);
+        self.nodes[node_index].children.push(new_index);
+
+        new_index
     }
 
-    fn simulate(&self, start_index: usize) -> f32  {
-        if let Some(node) = self.nodes.get(start_index) {
+    fn simulate(&mut self, start_index: usize) -> f32  {
+        let node = &self.nodes[start_index];
 
-            // in case expanded_node is already terminal
-            if node.is_terminal {
-                let winner = node.state.get_winner();
-                return match winner {
-                    Some(p) if p == node.player_to_move => -1.0,
-                    Some(_) => 1.0,
-                    None => 0.0,
-                };
-            }
-
-
-            let mut board = node.state.clone();
-            
-            while !board.is_terminal() {
-                let moves = board.legal_moves();
-                let r_index = self.get_random_move_index(moves.len());
-                let r_move = moves[r_index];
-                board.apply_move(r_move).unwrap();
-
-            };
-
-            let winner = board.get_winner();
-
-            // since board contains the turn after the node was expanded.
-            let last_player = match node.player_to_move {
-                Player::P1 => Player::P2,
-                Player::P2 => Player::P1,
-            };
-
+        if node.is_terminal {
+            let winner = node.state.get_winner();
             return match winner {
-                Some(p) if p == last_player => 1.0,
-                Some(_) => -1.0,
+                Some(p) if p == node.player_to_move => -1.0,
+                Some(_) => 1.0,
                 None => 0.0,
             };
-        }   
+        }
 
-        else {
-            panic!("no node to simulate.");
+        let mut board = node.state.clone();
+        let node_player = node.player_to_move;
+        
+        while !board.is_terminal() {
+            let moves = board.legal_moves();
+            let r_index = self.rng.random_range(0..moves.len());
+            let r_move = moves[r_index];
+            board.apply_move(r_move).unwrap();
+        }
+
+        let winner = board.get_winner();
+
+        // since board contains the turn after the node was expanded.
+        let last_player = match node_player {
+            Player::P1 => Player::P2,
+            Player::P2 => Player::P1,
+        };
+
+        match winner {
+            Some(p) if p == last_player => 1.0,
+            Some(_) => -1.0,
+            None => 0.0,
         }
     }
 
@@ -298,15 +303,16 @@ impl MCTS {
         }
 
 
-    fn get_random_move_index(&self, max: usize) -> usize {
-        rand::rng().random_range(0..max)
+    fn get_random_move_index(&mut self, max: usize) -> usize {
+        self.rng.random_range(0..max)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::board::{BoardState, Hex, HexOwner, Player};
+    use crate::board::BoardState;
+    use crate::types::{Hex, HexOwner, Player};
 
     #[test]
     // The root node (the state from which a move will be made)

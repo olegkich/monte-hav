@@ -1,10 +1,13 @@
 
+mod types;
 mod board;
+mod display;
+mod game;
 mod win_detector;
 mod mcts;
 
-use board::BoardState; 
-use win_detector::WinDetector;
+use board::BoardState;
+use game::GameRunner;
 
 fn main() {
     let mut board = BoardState::new(5);
