@@ -6,9 +6,9 @@ mod game;
 mod win_detector;
 mod mcts;
 mod server;
+mod game_service; 
+mod server_data;
 
-use board::BoardState;
-use game::GameRunner;
 use server::Server;
 
 #[actix_web::main]

@@ -1,6 +1,3 @@
-/// Core types for the Havannah game.
-/// Contains the fundamental data structures: HexOwner, Player, and Hex.
-
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub enum HexOwner {
     P1,
@@ -29,3 +26,4 @@ pub struct Hex {
     pub r: i32,
     pub owner: HexOwner 
 }
+

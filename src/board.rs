@@ -67,7 +67,12 @@ impl BoardState {
 
     pub fn is_terminal(&self) -> bool {
         let detector = WinDetector::from_board(self);
-        detector.run(&Player::P1) || detector.run(&Player::P2)
+
+        if detector.run(&Player::P1) || detector.run(&Player::P2) { 
+            return true;
+        };
+
+        self.legal_moves().is_empty()
     }
 
     pub fn get_winner(&self) -> Option<Player> {
@@ -110,6 +115,10 @@ impl BoardState {
         self.state.insert((q, r), Hex { q, r, owner: hex_owner});
 
         self.next_turn();
+    }
+
+    pub fn set_hex(&mut self, q: i32, r: i32, owner: HexOwner) {
+        self.state.insert((q, r), Hex { q, r, owner });
     }
 
     fn next_turn(&mut self) {
